@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,11 +38,12 @@ public class EmailControllerMVCIntegrationTest {
     private MockMvc mockMvc;
 
     @Before
-    public void init(){
+    public void init() {
         emailRepository.deleteAll();
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin")
     public void shouldReturnEmptyListWhenNoEmailsAreAvailable() throws Exception {
         this.mockMvc.perform(get("/email?page"))
                 .andExpect(status().isOk())
@@ -50,6 +52,7 @@ public class EmailControllerMVCIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin")
     public void shouldReturnListOfEmailsPagedWhenEmailsAreAvailable() throws Exception {
         Email email1 = createRandomEmail(5);
         Email email2 = createRandomEmail(2);
@@ -69,6 +72,7 @@ public class EmailControllerMVCIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin")
     public void shouldReturnFirstPageWhenGivenPageIsOutOfRange() throws Exception {
         createRandomEmail(1);
 
@@ -79,16 +83,18 @@ public class EmailControllerMVCIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin")
     public void shouldReturnMailById() throws Exception {
         Email email = createRandomEmail(1);
 
-        this.mockMvc.perform(get("/email/"+email.getId()))
+        this.mockMvc.perform(get("/email/" + email.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("mail", equalsMail(email)))
                 .andExpect(view().name("email"));
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin")
     public void shouldReturnErrorWhenMailIdIsNotValid() throws Exception {
         this.mockMvc.perform(get("/email/123"))
                 .andExpect(redirectedUrl("/email"))
@@ -100,9 +106,9 @@ public class EmailControllerMVCIntegrationTest {
         return new BaseMatcher<Email>() {
             @Override
             public boolean matches(Object item) {
-                if(item instanceof Email){
-                    Email other = (Email)item;
-                    if(email.getId() == other.getId()){
+                if (item instanceof Email) {
+                    Email other = (Email) item;
+                    if (email.getId() == other.getId()) {
                         return true;
                     }
                 }
@@ -121,9 +127,9 @@ public class EmailControllerMVCIntegrationTest {
         LocalDateTime localDateTime = LocalDateTime.now().minusMinutes(minusMinutes);
         Date receivedOn = Date.from(localDateTime.atZone(ZoneOffset.systemDefault()).toInstant());
         Email mail = new Email();
-        mail.setSubject("Test Subject "+randomToken);
-        mail.setContent("Test Content "+randomToken);
-        mail.setRawData("Test Content "+randomToken);
+        mail.setSubject("Test Subject " + randomToken);
+        mail.setContent("Test Content " + randomToken);
+        mail.setRawData("Test Content " + randomToken);
         mail.setReceivedOn(receivedOn);
         mail.setFromAddress("sender@example.com");
         mail.setToAddress("receiver@example.com");

@@ -19,3 +19,15 @@
     right: 24px;
     top: 20px;
 }
+
+.btn{
+    background-color: #01579b
+}
+
+.btn:hover{
+    background-color: #01579b
+}
+
+.right-margin{
+    margin-right: 2em;
+}

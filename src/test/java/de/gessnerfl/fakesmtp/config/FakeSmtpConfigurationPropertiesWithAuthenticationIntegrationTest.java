@@ -29,6 +29,6 @@ public class FakeSmtpConfigurationPropertiesWithAuthenticationIntegrationTest {
         assertEquals("user", sut.getAuthentication().getUsername());
         assertEquals("password", sut.getAuthentication().getPassword());
         assertNotNull(sut.getPersistence());
-        assertEquals(FakeSmtpConfigurationProperties.Persistence.DEFAULT_MAX_NUMBER_EMAILS, sut.getPersistence().getMaxNumberEmails().intValue());
+        assertNotNull(sut.getPersistence().getMaxNumberEmails());
     }
 }

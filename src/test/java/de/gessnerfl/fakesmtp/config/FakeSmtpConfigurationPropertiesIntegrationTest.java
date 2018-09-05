@@ -25,6 +25,6 @@ public class FakeSmtpConfigurationPropertiesIntegrationTest {
         assertEquals(InetAddress.getByName("127.0.0.1"), sut.getBindAddress());
         assertNull(sut.getAuthentication());
         assertNotNull(sut.getPersistence());
-        assertEquals(FakeSmtpConfigurationProperties.Persistence.DEFAULT_MAX_NUMBER_EMAILS, sut.getPersistence().getMaxNumberEmails().intValue());
+        assertNotNull(sut.getPersistence().getMaxNumberEmails());
     }
 }

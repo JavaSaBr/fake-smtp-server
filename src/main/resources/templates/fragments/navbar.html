@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 </head>
 
@@ -8,6 +8,11 @@
         <nav class="light-blue darken-4" style="padding-left:10px">
             <div class="nav-wrapper">
                 <a class="brand-logo" href="/"><i class="material-icons" style="font-size: 2rem">email</i>Fake SMTP Server</a>
+                <div class="right right-margin">
+                    <span sec:authorize="isAuthenticated()">
+                    <a th:href="@{/logout}">Sign Out</a>
+                </span>
+                </div>
             </div>
         </nav>
     </div>
