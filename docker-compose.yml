@@ -1,0 +1,11 @@
+version: '2.2'
+services:
+  fakesmtp:
+    init: true
+    container_name: "fake-smtp"
+    build: "."
+    ports:
+      - "5080:5080"
+      - "5081:5081"
+      - "5025:5025"
+      - "8000:8000"
