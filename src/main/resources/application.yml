@@ -1,0 +1,38 @@
+server:
+  port: ${SERVER_PORT:5080}
+
+management:
+  server:
+    port: ${MANAGEMENT_PORT:5081}
+  endpoints:
+    web:
+      exposure:
+        include: *
+
+spring:
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:h2:mem:mail
+    username: ${MYSQL_USER:admin}
+    password: ${MYSQL_PASSWORD:Test1234}
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  h2:
+    console:
+      enabled: true
+
+fakesmtp:
+  port: ${SMTP_PORT:5025}
+  #bindAddress:
+  persistence:
+    maxNumberEmails: ${MAX_NUMBER_EMAILS:1000}
+  #authentication:
+    #username:${SMTP_USER:admin}
+    #password:${SMTP_PASSWORD:admin}
+
+user:
+  username: ${APP_USER:admin}
+  password: ${APP_PASSWORD:admin}
