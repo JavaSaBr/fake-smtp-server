@@ -15,6 +15,17 @@
                 </div>
             </div>
             <div th:if="${mails.totalElements > 0}">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="right">
+                            <form  method="post" th:action="@{|/email/delete|}">
+                                <button class="btn waves-effect waves-light" type="submit" name="action">Delete all
+                                    <i class="material-icons right">delete</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <table class="striped responsive-table">
                     <thead>
                     <tr>
@@ -24,7 +35,7 @@
                         <th>Received On</th>
                         <th>Subject</th>
                         <th>Content Type</th>
-                        <th>Details</th>
+                        <th colspan="2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -32,10 +43,19 @@
                         <td th:text="${mail.id}">Id</td>
                         <td th:text="${mail.fromAddress}">From</td>
                         <td th:text="${mail.toAddress}">To</td>
-                        <td th:with="df='yyyy-MM-dd HH:mm:ss'" th:text="${#calendars.format(mail.receivedOn,df)}">Received On</td>
+                        <td th:with="df='dd.MM.yyyy HH:mm:ss'" th:text="${#calendars.format(mail.receivedOn,df)}">Received On</td>
                         <td th:text="${mail.subject}"></td>
                         <td th:text="${mail.contentType}"></td>
-                        <td><a alt="Details" th:href="@{|/email/${mail.id}|}"><i class="material-icons">email</i></a></td>
+                        <td>
+                            <form th:object="${mail}" method="get" th:action="@{|/email/${mail.id}|}">
+                                <input alt="Detail" type="submit" class="material-icons btn-flat" th:value="email">
+                            </form>
+                        </td>
+                        <td>
+                            <form th:object="${mail}" method="post" th:action="@{|/email/${mail.id}/delete|}">
+                                <input alt="Delete" type="submit" class="material-icons btn-flat" value="delete"/>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -52,6 +53,24 @@ public class EmailController {
     @RequestMapping({"/email/{id}"})
     public String getEmailById(@PathVariable Long id, Model model) {
         return emailRepository.findById(id).map(email -> appendToModelAndReturnView(model, email)).orElse(REDIRECT_EMAIL_LIST_VIEW);
+    }
+
+    @PostMapping({"/email/{id}/delete"})
+    public String deleteById(@PathVariable Long id) {
+
+        emailRepository.deleteById(id);
+        emailRepository.flush();
+
+        return REDIRECT_EMAIL_LIST_VIEW;
+    }
+
+    @PostMapping({"/email/delete"})
+    public String deleteAll() {
+
+        emailRepository.deleteAll();
+        emailRepository.flush();
+
+        return REDIRECT_EMAIL_LIST_VIEW;
     }
 
     private String appendToModelAndReturnView(Model model, Email email) {
