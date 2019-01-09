@@ -34,8 +34,8 @@
                         <th>To</th>
                         <th>Received On</th>
                         <th>Subject</th>
-                        <th>Content Type</th>
                         <th colspan="2">Actions</th>
+                        <th>Details</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,6 @@
                         <td th:text="${mail.toAddress}">To</td>
                         <td th:with="df='dd.MM.yyyy HH:mm:ss'" th:text="${#calendars.format(mail.receivedOn,df)}">Received On</td>
                         <td th:text="${mail.subject}"></td>
-                        <td th:text="${mail.contentType}"></td>
                         <td>
                             <form th:object="${mail}" method="get" th:action="@{|/email/${mail.id}|}">
                                 <input alt="Detail" type="submit" class="material-icons btn-flat" th:value="email">
@@ -56,6 +55,7 @@
                                 <input alt="Delete" type="submit" class="material-icons btn-flat" value="delete"/>
                             </form>
                         </td>
+                        <td><a alt="Details" th:href="@{|/email/${mail.id}|}"><i class="material-icons">email</i></a></td>
                     </tr>
                     </tbody>
                 </table>

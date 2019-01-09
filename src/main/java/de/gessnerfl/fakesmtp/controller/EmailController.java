@@ -1,11 +1,15 @@
 package de.gessnerfl.fakesmtp.controller;
 
 import de.gessnerfl.fakesmtp.model.Email;
+import de.gessnerfl.fakesmtp.repository.EmailAttachmentRepository;
 import de.gessnerfl.fakesmtp.repository.EmailRepository;
+import de.gessnerfl.fakesmtp.util.MediaTypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.ServletContext;
 
 @Controller
 @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
@@ -27,10 +34,16 @@ public class EmailController {
     static final String REDIRECT_EMAIL_LIST_VIEW = "redirect:/email";
 
     private final EmailRepository emailRepository;
+    private final EmailAttachmentRepository emailAttachmentRepository;
+    private final MediaTypeUtil mediaTypeUtil;
+    private final ServletContext servletContext;
 
     @Autowired
-    public EmailController(EmailRepository emailRepository) {
+    public EmailController(EmailRepository emailRepository, EmailAttachmentRepository emailAttachmentRepository, MediaTypeUtil mediaTypeUtil, ServletContext servletContext) {
         this.emailRepository = emailRepository;
+        this.emailAttachmentRepository = emailAttachmentRepository;
+        this.mediaTypeUtil = mediaTypeUtil;
+        this.servletContext = servletContext;
     }
 
     @RequestMapping({"/", "/email"})
@@ -42,7 +55,7 @@ public class EmailController {
         if(page < 0 || size <= 0){
             return REDIRECT_EMAIL_LIST_VIEW;
         }
-        Page<Email> result = emailRepository.findAll(PageRequest.of(page, size, DEFAULT_SORT));
+        var result = emailRepository.findAll(PageRequest.of(page, size, DEFAULT_SORT));
         if (result.getNumber() != 0 && result.getNumber() >= result.getTotalPages()) {
             return REDIRECT_EMAIL_LIST_VIEW;
         }
@@ -76,6 +89,22 @@ public class EmailController {
     private String appendToModelAndReturnView(Model model, Email email) {
         model.addAttribute(SINGLE_EMAIL_MODEL_NAME, email);
         return SINGLE_EMAIL_VIEW;
+    }
+
+    @RequestMapping({"/email/{mailId}/attachment/{attachmentId}"})
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> getEmailAttachmentById(@PathVariable Long mailId, @PathVariable Long attachmentId) {
+        var attachment = emailAttachmentRepository.findById(attachmentId)
+                .filter(a -> a.getEmail().getId().equals(mailId))
+                .orElseThrow(() -> new AttachmentNotFoundException("Attachment with id " + attachmentId + " not found for mail " + mailId));
+
+        var mediaType = mediaTypeUtil.getMediaTypeForFileName(this.servletContext, attachment.getFilename());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + attachment.getFilename())
+                .contentType(mediaType)
+                .contentLength(attachment.getData().length) //
+                .body(new ByteArrayResource(attachment.getData()));
     }
 
 }

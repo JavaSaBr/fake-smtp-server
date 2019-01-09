@@ -1,15 +1,13 @@
-from openjdk:8-jdk-alpine as builder
+from openjdk:11-jdk as builder
 
 WORKDIR /src/
 
-# Git for gradle-semver
-RUN apk add --no-cache git
 RUN export GRADLE_USER_HOME=$(pwd)/.gradle
 
 ADD . . 
 RUN ./gradlew --build-cache build
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jre
 
 VOLUME /tmp
 
