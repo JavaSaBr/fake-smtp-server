@@ -30,7 +30,9 @@ public class EmailRetentionTimer {
         if(isDataRetentionConfigured(persistence)){
             var maxNumber = persistence.getMaxNumberEmails();
             var count = emailRepository.deleteEmailsExceedingDateRetentionLimit(maxNumber);
-            logger.info("Deleted {} emails which exceeded the maximum number {} of emails to be stored", count, maxNumber);
+            if(count != 0) {
+                logger.info("Deleted {} emails which exceeded the maximum number {} of emails to be stored", count, maxNumber);
+            }
         }
     }
 
