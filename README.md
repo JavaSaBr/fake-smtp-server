@@ -4,21 +4,23 @@
 
 ## Introduction
 
-The root of this project comes from [gessnerfl/fake-smtp-server](https://github.com/gessnerfl/fake-smtp-server).
+The root of this project comes from [kurzdigital/fake-smtp-server](https://github.com/kurzdigital/fake-smtp-server).
 It is extended by a delete function for the emails and the it is secured behind a login.
 
 ## Prerequisites
 
 1. docker, docker-compose
-2. JDK 8
-3 
+2. JDK 11
+
 ## Getting started
 
 ### Start everything
 
-    $ make # ./gradlew build
-    $ make env
-    
+```bash
+./gradlew build
+docker build -t fake-smtp-server .
+```
+
 ### Configuration
 
 #### Environment variables
@@ -39,13 +41,8 @@ It is extended by a delete function for the emails and the it is secured behind 
      
 #### Property Configuration
 
-To enable the SMTP authentication you need to remove the `#` at the `fakesmtp`-Section for the attributes:
-- authentication
-- username
-- password
         
 To bind the fakesmtp to another address remove the `#` at the `fakesmtp`-Section for `bindAddress` and add the desired address
-    
     
 ## Next Tasks
 
