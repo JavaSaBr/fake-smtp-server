@@ -26,12 +26,8 @@ spring:
 
 fakesmtp:
   port: ${SMTP_PORT:5025}
-  #bindAddress:
   persistence:
     maxNumberEmails: ${MAX_NUMBER_EMAILS:1000}
-  authentication:
-    username: ${SMTP_USER:admin}
-    password: ${SMTP_PASSWORD:admin}
 
 user:
   username: ${APP_USER:admin}
