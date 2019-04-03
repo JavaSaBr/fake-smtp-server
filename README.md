@@ -1,11 +1,10 @@
 # Fake SMTP Server
 
-*Simple SMTP Server which stores all received emails in an in-memory database and renders the emails in a web interface*
+*Simple SMTP Server which stores all received emails in an in-memory database*
 
 ## Introduction
 
 The root of this project comes from [kurzdigital/fake-smtp-server](https://github.com/kurzdigital/fake-smtp-server).
-It is extended by a delete function for the emails and the it is secured behind a login.
 
 ## Prerequisites
 
@@ -27,9 +26,6 @@ docker build -t fake-smtp-server .
 
     SERVER-PORT         Port for the Web-UI, Default: 5080
     
-    APP_USER            Username for the Web-UI, Default: admin
-    APP_PASSWORD        Password for the Web-UI, Default: admin
-    
     MYSQL_USER          Username for the h2 user, Default: admin
     MYSQL_PASSWORD      Password for the h2 user, Default: Test1234
     
@@ -39,12 +35,7 @@ docker build -t fake-smtp-server .
     
     MAX_NUMBER_EMAILS   Max. amount of emails stored in the h2, Default: 1000
      
-#### Property Configuration
+#### HTTP API
 
-        
-To bind the fakesmtp to another address remove the `#` at the `fakesmtp`-Section for `bindAddress` and add the desired address
-    
-## Next Tasks
-
-- Refactoring (remove unnecessary gradle tasks, ...)
-- Connect keycloak as authentication
+/email/count/from/{from} -> get count of received emails from the address
+/email/delete -> delete all emails on this server

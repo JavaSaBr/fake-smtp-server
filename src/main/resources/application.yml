@@ -32,7 +32,3 @@ fakesmtp:
   authentication:
     username: ${SMTP_USER:admin}
     password: ${SMTP_PASSWORD:admin}
-
-user:
-  username: ${APP_USER:admin}
-  password: ${APP_PASSWORD:admin}

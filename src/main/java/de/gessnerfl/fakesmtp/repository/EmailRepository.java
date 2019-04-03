@@ -7,11 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
-public interface EmailRepository extends JpaRepository<Email,Long>{
+public interface EmailRepository extends JpaRepository<Email, Long> {
 
     @Transactional
     @Modifying
     @Query(value = "DELETE email o WHERE o.id IN ( SELECT i.id FROM email i ORDER BY i.received_on DESC OFFSET ?1)", nativeQuery = true)
     int deleteEmailsExceedingDateRetentionLimit(int maxNumber);
+
+    List<Email> findByFromAddress(String fromAddress);
+
+    long countByFromAddress(String fromAddress);
 }
