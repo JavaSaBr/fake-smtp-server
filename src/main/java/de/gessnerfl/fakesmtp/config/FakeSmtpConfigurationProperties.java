@@ -1,11 +1,11 @@
 package de.gessnerfl.fakesmtp.config;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 import java.net.InetAddress;
 
 @Getter

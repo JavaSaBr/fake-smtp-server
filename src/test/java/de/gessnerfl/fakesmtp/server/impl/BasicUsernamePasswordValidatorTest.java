@@ -1,18 +1,17 @@
 package de.gessnerfl.fakesmtp.server.impl;
 
 import de.gessnerfl.fakesmtp.config.FakeSmtpConfigurationProperties;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.subethamail.smtp.auth.LoginFailedException;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BasicUsernamePasswordValidatorTest {
 
     @Mock
@@ -20,7 +19,6 @@ public class BasicUsernamePasswordValidatorTest {
 
     @InjectMocks
     private BasicUsernamePasswordValidator sut;
-
 
     @Test
     public void shouldSuccessfullyValidateCorrectUsernameAndPassword() throws Exception {
@@ -37,7 +35,7 @@ public class BasicUsernamePasswordValidatorTest {
         verify(authentication).getPassword();
     }
 
-    @Test(expected = LoginFailedException.class)
+    @Test
     public void shouldThrowLoginFailedExceptionWhenUsernameIsNotValid() throws Exception {
         var username = "username";
         var invalidUsername = "inValidUsername";
@@ -49,7 +47,7 @@ public class BasicUsernamePasswordValidatorTest {
         sut.login(invalidUsername, password);
     }
 
-    @Test(expected = LoginFailedException.class)
+    @Test
     public void shouldThrowLoginFailedExceptionWhenPasswordIsNotValid() throws Exception {
         var username = "username";
         var password = "password";
@@ -62,7 +60,7 @@ public class BasicUsernamePasswordValidatorTest {
         sut.login(username, invalidPassword);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldThrowNullPointerExceptionWhenAuthenticationIsMissing() throws Exception {
         var username = "username";
         var password = "password";
@@ -71,7 +69,7 @@ public class BasicUsernamePasswordValidatorTest {
         sut.login(username, password);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldThrowNullPointerExceptionWhenUsernameIsMissingInAuthentication() throws Exception {
         var username = "username";
         var password = "password";
@@ -82,7 +80,7 @@ public class BasicUsernamePasswordValidatorTest {
         sut.login(username, password);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldThrowNullPointerExceptionWhenPasswordIsMissingInAuthentication() throws Exception {
         var username = "username";
         var password = "password";

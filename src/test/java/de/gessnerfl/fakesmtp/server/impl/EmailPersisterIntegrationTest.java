@@ -2,25 +2,29 @@ package de.gessnerfl.fakesmtp.server.impl;
 
 import de.gessnerfl.fakesmtp.TestResourceUtil;
 import de.gessnerfl.fakesmtp.repository.EmailRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
 @ActiveProfiles("integrationtest")
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EmailPersisterIntegrationTest {
     private static final String SENDER = "sender";
     private static final String RECEIVER = "receiver";
@@ -31,7 +35,7 @@ public class EmailPersisterIntegrationTest {
     @Autowired
     private EmailPersister sut;
 
-    @Before
+    @BeforeEach
     public void setup(){
         emailRepository.deleteAll();
     }
@@ -45,7 +49,8 @@ public class EmailPersisterIntegrationTest {
         sut.deliver(SENDER, RECEIVER, data);
 
         var mails = emailRepository.findAll();
-        assertThat(mails, hasSize(1));
+        assertThat(mails)
+            .hasSize(1);
 
         var mail = mails.get(0);
 
@@ -69,7 +74,7 @@ public class EmailPersisterIntegrationTest {
         sut.deliver(SENDER, RECEIVER, data);
 
         var mails = emailRepository.findAll();
-        assertThat(mails, hasSize(1));
+        assertThat(mails).hasSize(1);
 
         var mail = mails.get(0);
 
@@ -92,7 +97,7 @@ public class EmailPersisterIntegrationTest {
         sut.deliver(SENDER, RECEIVER, data);
 
         var mails = emailRepository.findAll();
-        assertThat(mails, hasSize(1));
+        assertThat(mails).hasSize(1);
 
         var mail = mails.get(0);
 

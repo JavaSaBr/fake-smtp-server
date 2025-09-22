@@ -1,21 +1,20 @@
 package de.gessnerfl.fakesmtp.config;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.InetAddress;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 @ActiveProfiles("integrationtest,config_with_auth_integrationtest")
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class FakeSmtpConfigurationPropertiesWithAuthenticationIntegrationTest {
 
     @Autowired

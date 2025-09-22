@@ -1,9 +1,8 @@
 package de.gessnerfl.fakesmtp.util;
 
+import jakarta.servlet.ServletContext;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.ServletContext;
 
 @Service
 public class MediaTypeUtil {

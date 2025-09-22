@@ -1,12 +1,12 @@
 package de.gessnerfl.fakesmtp;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertNotNull;
 
 public class TestResourceUtil {
     private static final String TEST_DATA_FOLDER = "/test-data/";

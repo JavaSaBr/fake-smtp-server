@@ -1,10 +1,9 @@
 package de.gessnerfl.fakesmtp.server;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @Service
 public class EmailServer {

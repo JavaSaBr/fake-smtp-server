@@ -1,12 +1,11 @@
 package de.gessnerfl.fakesmtp;
 
+import jakarta.mail.MessagingException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-
-import javax.mail.MessagingException;
 
 public class TestDataCreator {
 

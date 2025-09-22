@@ -1,12 +1,12 @@
 package de.gessnerfl.fakesmtp.server.impl;
 
 import de.gessnerfl.fakesmtp.config.FakeSmtpConfigurationProperties;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.subethamail.smtp.AuthenticationHandlerFactory;
 import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
@@ -14,11 +14,13 @@ import org.subethamail.smtp.server.SMTPServer;
 
 import java.net.InetAddress;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SmtpServerConfiguratorTest {
 
     @Mock
@@ -65,7 +67,8 @@ public class SmtpServerConfiguratorTest {
 
         var authenticationHandlerFactory = argumentCaptor.getValue();
         assertNotNull(authenticationHandlerFactory);
-        assertThat(authenticationHandlerFactory, instanceOf(EasyAuthenticationHandlerFactory.class));
+        assertThat(authenticationHandlerFactory)
+            .isInstanceOf(EasyAuthenticationHandlerFactory.class);
 
         var easyAuthenticationHandlerFactory = (EasyAuthenticationHandlerFactory)authenticationHandlerFactory;
         assertSame(basicUsernamePasswordValidator, easyAuthenticationHandlerFactory.getValidator());
