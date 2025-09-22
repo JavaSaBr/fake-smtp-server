@@ -15,16 +15,15 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
-@ActiveProfiles("integrationtest")
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("integration-test")
 public class EmailPersisterIntegrationTest {
     private static final String SENDER = "sender";
     private static final String RECEIVER = "receiver";

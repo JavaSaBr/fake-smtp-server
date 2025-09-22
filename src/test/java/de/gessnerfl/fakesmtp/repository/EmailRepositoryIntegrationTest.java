@@ -22,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Transactional
-@ActiveProfiles("integrationtest")
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("integration-test")
 public class EmailRepositoryIntegrationTest {
 
     private static final Sort SORT_DESC_BY_RECEIVED_ON = Sort.by(Sort.Direction.DESC, "receivedOn");

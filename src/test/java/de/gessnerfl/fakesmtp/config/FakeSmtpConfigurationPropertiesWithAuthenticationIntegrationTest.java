@@ -12,9 +12,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.InetAddress;
 
-@ActiveProfiles("integrationtest,config_with_auth_integrationtest")
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles({
+    "integration-test",
+    "config-with-auth-integration-test"
+})
 public class FakeSmtpConfigurationPropertiesWithAuthenticationIntegrationTest {
 
     @Autowired

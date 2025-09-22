@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -68,7 +68,7 @@ public class EmailPersisterTest {
 
         when(emailFactory.convert(any(RawData.class))).thenThrow(new IOException("foo"));
 
-        sut.deliver(from, to, contentStream);
+        assertThrows(IOException.class, () -> sut.deliver(from, to, contentStream));
 
         verify(emailRepository, never()).save(any(Email.class));
     }

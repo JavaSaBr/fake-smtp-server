@@ -13,9 +13,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.InetAddress;
 
-@ActiveProfiles("integrationtest,config_with_persistence_integrationtest")
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles({
+    "integration-test",
+    "config-with-persistence-integration-test"
+})
 public class FakeSmtpConfigurationPropertiesWithPersistenceIntegrationTest {
 
     @Autowired

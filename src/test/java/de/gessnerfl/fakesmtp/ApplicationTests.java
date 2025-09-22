@@ -6,12 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ActiveProfiles("integrationtest")
 @SpringBootTest
+@ActiveProfiles("integration-test")
 @ExtendWith(SpringExtension.class)
 public class ApplicationTests {
-
 	@Test
-	public void contextLoads() {
-	}
+	public void contextLoads() {}
 }
