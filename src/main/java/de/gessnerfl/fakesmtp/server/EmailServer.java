@@ -2,32 +2,30 @@ package de.gessnerfl.fakesmtp.server;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class EmailServer {
 
-    private final SmtpServerFactory smtpServerFactory;
+  final SmtpServerFactory smtpServerFactory;
 
-    SmtpServer smtpServer;
+  SmtpServer smtpServer;
 
-    @Autowired
-    public EmailServer(SmtpServerFactory smtpServerFactory) {
-        this.smtpServerFactory = smtpServerFactory;
+  @PostConstruct
+  public void startServer() {
+    smtpServer = smtpServerFactory.create();
+    smtpServer.start();
+  }
+
+  @PreDestroy
+  public void shutdown() {
+    if (smtpServer != null) {
+      smtpServer.stop();
     }
-
-    @PostConstruct
-    public void startServer() {
-        smtpServer = smtpServerFactory.create();
-        smtpServer.start();
-    }
-
-    @PreDestroy
-    public void shutdown() {
-        if (smtpServer != null) {
-            smtpServer.stop();
-        }
-    }
-
+  }
 }

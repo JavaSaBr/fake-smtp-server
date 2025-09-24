@@ -1,24 +1,26 @@
 package de.gessnerfl.fakesmtp.controller;
 
 import de.gessnerfl.fakesmtp.repository.EmailRepository;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor(onConstructor_ = @Autowired)
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailController {
 
-    private final EmailRepository emailRepository;
+  EmailRepository emailRepository;
 
-    @GetMapping("/count/email/from/{from}")
-    long getEmailsCountFrom(@PathVariable String from) {
-        return emailRepository.countByFromAddress(from);
-    }
+  @GetMapping("/count/email/from/{from}")
+  long getEmailsCountFrom(@PathVariable String from) {
+    return emailRepository.countByFromAddress(from);
+  }
 
-    @DeleteMapping("/emails")
-    void deleteAll() {
-        emailRepository.deleteAll();
-        emailRepository.flush();
-    }
+  @DeleteMapping("/emails")
+  void deleteAll() {
+    emailRepository.deleteAll();
+    emailRepository.flush();
+  }
 }

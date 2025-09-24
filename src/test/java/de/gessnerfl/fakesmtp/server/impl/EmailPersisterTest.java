@@ -22,54 +22,54 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class EmailPersisterTest {
 
-    @Mock
-    private EmailFactory emailFactory;
-    @Mock
-    private EmailRepository emailRepository;
-    @Mock
-    private Logger logger;
+  @Mock
+  private EmailFactory emailFactory;
+  @Mock
+  private EmailRepository emailRepository;
+  @Mock
+  private Logger logger;
 
-    @InjectMocks
-    private EmailPersister sut;
+  @InjectMocks
+  private EmailPersister sut;
 
-    @Test
-    public void shouldAcceptAllMails(){
-        assertTrue(sut.accept("foo", "bar"));
-    }
+  @Test
+  public void shouldAcceptAllMails() {
+    assertTrue(sut.accept("foo", "bar"));
+  }
 
-    @Test
-    public void shouldCreateEmailEntityAndStoreItInDatabaseWhenEmailIsDelivered() throws IOException {
-        var from = "from";
-        var to = "to";
-        var contentString = "content";
-        var content = contentString.getBytes(StandardCharsets.UTF_8);
-        var contentStream = new ByteArrayInputStream(content);
-        var mail = mock(Email.class);
+  @Test
+  public void shouldCreateEmailEntityAndStoreItInDatabaseWhenEmailIsDelivered() throws IOException {
+    var from = "from";
+    var to = "to";
+    var contentString = "content";
+    var content = contentString.getBytes(StandardCharsets.UTF_8);
+    var contentStream = new ByteArrayInputStream(content);
+    var mail = mock(Email.class);
 
-        when(emailFactory.convert(any(RawData.class))).thenReturn(mail);
+    when(emailFactory.convert(any(RawData.class))).thenReturn(mail);
 
-        sut.deliver(from, to, contentStream);
+    sut.deliver(from, to, contentStream);
 
-        ArgumentCaptor<RawData> argumentCaptor = ArgumentCaptor.forClass(RawData.class);
-        verify(emailFactory).convert(argumentCaptor.capture());
-        RawData rawData = argumentCaptor.getValue();
-        assertEquals(from, rawData.getFrom());
-        assertEquals(to, rawData.getTo());
-        assertEquals(contentString, rawData.getContentAsString());
-        verify(emailRepository).save(mail);
-    }
+    ArgumentCaptor<RawData> argumentCaptor = ArgumentCaptor.forClass(RawData.class);
+    verify(emailFactory).convert(argumentCaptor.capture());
+    RawData rawData = argumentCaptor.getValue();
+    assertEquals(from, rawData.getFrom());
+    assertEquals(to, rawData.getTo());
+    assertEquals(contentString, rawData.getContentAsString());
+    verify(emailRepository).save(mail);
+  }
 
-    @Test
-    public void shouldThrowExceptionWhenEmailEntityCannotBeCreatedWhenEmailIsDelivered() throws IOException {
-        var from = "from";
-        var to = "to";
-        var content = "content".getBytes(StandardCharsets.UTF_8);
-        var contentStream = new ByteArrayInputStream(content);
+  @Test
+  public void shouldThrowExceptionWhenEmailEntityCannotBeCreatedWhenEmailIsDelivered() throws IOException {
+    var from = "from";
+    var to = "to";
+    var content = "content".getBytes(StandardCharsets.UTF_8);
+    var contentStream = new ByteArrayInputStream(content);
 
-        when(emailFactory.convert(any(RawData.class))).thenThrow(new IOException("foo"));
+    when(emailFactory.convert(any(RawData.class))).thenThrow(new IOException("foo"));
 
-        assertThrows(IOException.class, () -> sut.deliver(from, to, contentStream));
+    assertThrows(IOException.class, () -> sut.deliver(from, to, contentStream));
 
-        verify(emailRepository, never()).save(any(Email.class));
-    }
+    verify(emailRepository, never()).save(any(Email.class));
+  }
 }

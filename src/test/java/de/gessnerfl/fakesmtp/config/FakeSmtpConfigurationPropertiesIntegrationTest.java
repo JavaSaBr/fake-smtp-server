@@ -21,15 +21,20 @@ import java.net.InetAddress;
 })
 public class FakeSmtpConfigurationPropertiesIntegrationTest {
 
-    @Autowired
-    private FakeSmtpConfigurationProperties sut;
+  @Autowired
+  private FakeSmtpConfigurationProperties sut;
 
-    @Test
-    public void shouldLoadConfigurationParameters() throws Exception {
-        assertEquals(1234, sut.getPort().intValue());
-        assertEquals(InetAddress.getByName("127.0.0.1"), sut.getBindAddress());
-        assertNull(sut.getAuthentication());
-        assertNotNull(sut.getPersistence());
-        assertNotNull(sut.getPersistence().getMaxNumberEmails());
-    }
+  @Test
+  public void shouldLoadConfigurationParameters() throws Exception {
+    assertEquals(1234,
+        sut
+            .getPort()
+            .intValue());
+    assertEquals(InetAddress.getByName("127.0.0.1"), sut.getBindAddress());
+    assertNull(sut.getAuthentication());
+    assertNotNull(sut.getPersistence());
+    assertNotNull(sut
+        .getPersistence()
+        .getMaxNumberEmails());
+  }
 }

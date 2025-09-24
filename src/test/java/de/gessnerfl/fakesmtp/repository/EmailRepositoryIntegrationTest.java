@@ -27,70 +27,74 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("integration-test")
 public class EmailRepositoryIntegrationTest {
 
-    private static final Sort SORT_DESC_BY_RECEIVED_ON = Sort.by(Sort.Direction.DESC, "receivedOn");
-    @Autowired
-    private EmailRepository sut;
+  private static final Sort SORT_DESC_BY_RECEIVED_ON = Sort.by(Sort.Direction.DESC, "receivedOn");
+  @Autowired
+  private EmailRepository sut;
 
-    @BeforeEach
-    public void init(){
-        sut.deleteAll();
-    }
+  @BeforeEach
+  public void init() {
+    sut.deleteAll();
+  }
 
-    @Test
-    public void shouldDeleteEmailsWhichExceedTheRetentionLimitOfMaximumNumberOfEmails(){
-        var mail1 = createRandomEmail(5);
-        var mail2 = createRandomEmail(4);
-        var mail3 = createRandomEmail(3);
-        var mail4 = createRandomEmail(2);
-        var mail5 = createRandomEmail(1);
+  @Test
+  public void shouldDeleteEmailsWhichExceedTheRetentionLimitOfMaximumNumberOfEmails() {
+    var mail1 = createRandomEmail(5);
+    var mail2 = createRandomEmail(4);
+    var mail3 = createRandomEmail(3);
+    var mail4 = createRandomEmail(2);
+    var mail5 = createRandomEmail(1);
 
-        var beforeDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
-        assertThat(beforeDeletion).hasSize(5);
-        assertThat(beforeDeletion).contains(mail5, mail4, mail3, mail2, mail1);
+    var beforeDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
+    assertThat(beforeDeletion).hasSize(5);
+    assertThat(beforeDeletion).contains(mail5, mail4, mail3, mail2, mail1);
 
-        var count = sut.deleteEmailsExceedingDateRetentionLimit(3);
-        assertEquals(2, count);
+    var count = sut.deleteEmailsExceedingDateRetentionLimit(3);
+    assertEquals(2, count);
 
-        var afterDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
-        assertThat(afterDeletion).hasSize(3);
-        assertThat(afterDeletion).contains(mail5, mail4, mail3);
-    }
+    var afterDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
+    assertThat(afterDeletion).hasSize(3);
+    assertThat(afterDeletion).contains(mail5, mail4, mail3);
+  }
 
-    @Test
-    public void shouldNotDeleteAnyEmailWhenTheNumberOfEmailsDoesNotExceedTheRetentionLimitOfMaximumNumberOfEmails(){
-        var mail1 = createRandomEmail(5);
-        var mail2 = createRandomEmail(4);
-        var mail3 = createRandomEmail(3);
+  @Test
+  public void shouldNotDeleteAnyEmailWhenTheNumberOfEmailsDoesNotExceedTheRetentionLimitOfMaximumNumberOfEmails() {
+    var mail1 = createRandomEmail(5);
+    var mail2 = createRandomEmail(4);
+    var mail3 = createRandomEmail(3);
 
-        var beforeDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
-        assertThat(beforeDeletion).hasSize(3);
-        assertThat(beforeDeletion).contains(mail3, mail2, mail1);
+    var beforeDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
+    assertThat(beforeDeletion).hasSize(3);
+    assertThat(beforeDeletion).contains(mail3, mail2, mail1);
 
-        var count = sut.deleteEmailsExceedingDateRetentionLimit(3);
-        assertEquals(0, count);
+    var count = sut.deleteEmailsExceedingDateRetentionLimit(3);
+    assertEquals(0, count);
 
-        var afterDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
-        assertThat(afterDeletion).hasSize(3);
-        assertThat(beforeDeletion).contains(mail3, mail2, mail1);
-    }
+    var afterDeletion = sut.findAll(SORT_DESC_BY_RECEIVED_ON);
+    assertThat(afterDeletion).hasSize(3);
+    assertThat(beforeDeletion).contains(mail3, mail2, mail1);
+  }
 
-    private Email createRandomEmail(int minusMinutes) {
-        var randomToken = RandomStringUtils.randomAlphanumeric(6);
-        var localDateTime = LocalDateTime.now().minusMinutes(minusMinutes);
-        var receivedOn = Date.from(localDateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+  private Email createRandomEmail(int minusMinutes) {
+    var randomToken = RandomStringUtils.randomAlphanumeric(6);
+    var localDateTime = LocalDateTime
+        .now()
+        .minusMinutes(minusMinutes);
+    var receivedOn = Date.from(localDateTime
+        .atZone(ZoneOffset.systemDefault())
+        .toInstant());
 
-        var content = new EmailContent();
-        content.setContentType(ContentType.PLAIN);
-        content.setData("Test Content "+randomToken);
+    var content = new EmailContent();
+    content.setContentType(ContentType.PLAIN);
+    content.setData("Test Content " + randomToken);
 
-        var mail = new Email();
-        mail.setSubject("Test Subject "+randomToken);
-        mail.setRawData("Test Content "+randomToken);
-        mail.setReceivedOn(receivedOn);
-        mail.setFromAddress("sender@example.com");
-        mail.setToAddress("receiver@example.com");
-        mail.addContent(content);
-        return sut.save(mail);
-    }
+    var mail = new Email();
+    mail.setSubject("Test Subject " + randomToken);
+    mail.setRawData("Test Content " + randomToken);
+    mail.setReceivedOn(receivedOn);
+    mail.setFromAddress("sender@example.com");
+    mail.setToAddress("receiver@example.com");
+    mail.addContent(content);
+    return sut.save(mail);
+  }
 
 }

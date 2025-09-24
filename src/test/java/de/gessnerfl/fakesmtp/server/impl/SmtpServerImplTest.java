@@ -7,18 +7,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class SmtpServerImplTest {
-    
-    @Test
-    public void shouldCreateNewInstanceAndDelegateCallsToRealImplementation(){
-        var delegate = mock(SMTPServer.class);
 
-        var sut = new SmtpServerImpl(delegate);
+  @Test
+  public void shouldCreateNewInstanceAndDelegateCallsToRealImplementation() {
+    var delegate = mock(SMTPServer.class);
 
-        sut.start();
-        verify(delegate).start();
+    var sut = new SmtpServerImpl(delegate);
 
-        sut.stop();
-        verify(delegate).stop();
-    }
+    sut.start();
+    verify(delegate).start();
+
+    sut.stop();
+    verify(delegate).stop();
+  }
 
 }

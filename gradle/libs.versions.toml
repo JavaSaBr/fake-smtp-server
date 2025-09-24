@@ -61,6 +61,7 @@ commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "co
 asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 h2database = { module = "com.h2database:h2", version.ref = "h2database" }
 jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-api" }
+hibernate-validator = { module = "org.hibernate.validator:hibernate-validator" }
 
 
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }

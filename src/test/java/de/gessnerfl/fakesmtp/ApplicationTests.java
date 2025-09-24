@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("integration-test")
 @ExtendWith(SpringExtension.class)
 public class ApplicationTests {
-	@Test
-	public void contextLoads() {}
+  @Test
+  public void contextLoads() {
+  }
 }

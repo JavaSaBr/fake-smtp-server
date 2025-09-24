@@ -9,72 +9,74 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class TestDataCreator {
 
-    private static final int NUMBER_OF_TEST_EMAILS = 5;
+  private static final int NUMBER_OF_TEST_EMAILS = 5;
 
-    public static void main(String[] args) {
-        for(var i = 0; i < NUMBER_OF_TEST_EMAILS; i++){
-            createEmail(i);
-            createHtmlEmail(i);
-            createMimeAlternativeEmail(i);
-        }
+  public static void main(String[] args) {
+    for (var i = 0; i < NUMBER_OF_TEST_EMAILS; i++) {
+      createEmail(i);
+      createHtmlEmail(i);
+      createMimeAlternativeEmail(i);
     }
+  }
 
-    private static void createEmail(int i) {
-        var message = new SimpleMailMessage();
-        message.setTo("receiver@exmaple.com");
-        message.setFrom("sender@example.com");
-        message.setSubject("Test-Plain-Mail " + i);
-        message.setText("This is the test mail number "+i);
-        getEmailSender().send(message);
+  private static void createEmail(int i) {
+    var message = new SimpleMailMessage();
+    message.setTo("receiver@exmaple.com");
+    message.setFrom("sender@example.com");
+    message.setSubject("Test-Plain-Mail " + i);
+    message.setText("This is the test mail number " + i);
+    getEmailSender().send(message);
+  }
+
+  private static void createHtmlEmail(int i) {
+    try {
+      var sender = getEmailSender();
+
+      var message = sender.createMimeMessage();
+      var helper = new MimeMessageHelper(message);
+      helper.setTo("receiver@exmaple.com");
+      helper.setFrom("sender@example.com");
+      helper.setSubject("Test-Html-Mail " + i);
+      helper.setText("<html><head></head><body>This is the test mail number " + i + "</body>", true);
+
+      sender.send(message);
+    } catch (MessagingException e) {
+      throw new RuntimeException("Failed to create mail", e);
     }
+  }
 
-    private static void createHtmlEmail(int i){
-        try {
-            var sender = getEmailSender();
+  private static void createMimeAlternativeEmail(int i) {
+    try {
+      var sender = getEmailSender();
 
-            var message = sender.createMimeMessage();
-            var helper = new MimeMessageHelper(message);
-            helper.setTo("receiver@exmaple.com");
-            helper.setFrom("sender@example.com");
-            helper.setSubject("Test-Html-Mail " + i);
-            helper.setText("<html><head></head><body>This is the test mail number " + i + "</body>", true);
-
-            sender.send(message);
-        } catch (MessagingException e){
-            throw new RuntimeException("Failed to create mail", e);
-        }
+      var message = sender.createMimeMessage();
+      var helper = new MimeMessageHelper(message, true);
+      helper.setTo("receiver@exmaple.com");
+      helper.setFrom("sender@example.com");
+      helper.setSubject("Test-Alternative-Mail " + i);
+      helper.setText(
+          "This is the test mail number" + i,
+          "<html><head></head><body>This is the test mail number " + i + "</body>");
+      helper.addAttachment("app-icon.png", new ClassPathResource("/static/gfx/app-icon.png"));
+      helper.addAttachment("customizing.css", new ClassPathResource("/static/customizing.css"));
+      sender.send(message);
+    } catch (MessagingException e) {
+      throw new RuntimeException("Failed to create mail", e);
     }
+  }
 
-    private static void createMimeAlternativeEmail(int i) {
-        try {
-            var sender = getEmailSender();
+  private static JavaMailSender getEmailSender() {
+    var mailSender = new JavaMailSenderImpl();
+    mailSender.setHost("localhost");
+    mailSender.setPort(5025);
 
-            var message = sender.createMimeMessage();
-            var helper = new MimeMessageHelper(message, true);
-            helper.setTo("receiver@exmaple.com");
-            helper.setFrom("sender@example.com");
-            helper.setSubject("Test-Alternative-Mail " + i);
-            helper.setText("This is the test mail number" + i, "<html><head></head><body>This is the test mail number " + i + "</body>");
-            helper.addAttachment("app-icon.png", new ClassPathResource("/static/gfx/app-icon.png"));
-            helper.addAttachment("customizing.css", new ClassPathResource("/static/customizing.css"));
-            sender.send(message);
-        } catch (MessagingException e){
-            throw new RuntimeException("Failed to create mail", e);
-        }
-    }
+    var props = mailSender.getJavaMailProperties();
+    props.put("mail.transport.protocol", "smtp");
+    props.put("mail.smtp.auth", "false");
+    props.put("mail.smtp.starttls.enable", "false");
+    props.put("mail.debug", "false");
 
-    private static JavaMailSender getEmailSender() {
-        var mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("localhost");
-        mailSender.setPort(5025);
-
-        var props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "false");
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.debug", "false");
-
-        return mailSender;
-    }
+    return mailSender;
+  }
 
 }

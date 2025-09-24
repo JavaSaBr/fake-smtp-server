@@ -9,7 +9,7 @@ The root of this project comes from [kurzdigital/fake-smtp-server](https://githu
 ## Prerequisites
 
 1. docker, docker-compose
-2. JDK 11
+2. JDK 21
 
 ## Getting started
 

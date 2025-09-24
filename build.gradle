@@ -40,11 +40,12 @@ dependencies {
   implementation libs.subethasmtp
   implementation libs.flyway.core
   implementation libs.thymeleaf.extras.springsecurity
-  implementation libs.jaxb.impl
+  //implementation libs.jaxb.impl
   implementation libs.jquery
   implementation libs.materializecss
   implementation libs.material.design.icons
   implementation libs.jakarta.validation.api
+  implementation libs.hibernate.validator
 
   compileOnly libs.lombok
 
@@ -98,7 +99,7 @@ javadoc {
 }
 
 bootJar {
-  archiveClassifier = 'fake-smtp-server.jar'
+  archiveBaseName = 'fake-smtp-server'
 }
 
 wrapper {
