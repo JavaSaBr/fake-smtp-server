@@ -1,4 +1,4 @@
-from openjdk:11-jdk as builder
+from eclipse-temurin:21-jdk as builder
 
 WORKDIR /src/
 
@@ -7,7 +7,7 @@ RUN export GRADLE_USER_HOME=$(pwd)/.gradle
 ADD . . 
 RUN ./gradlew --build-cache build
 
-FROM openjdk:11-jre
+FROM eclipse-temurin:21-jre
 
 VOLUME /tmp
 

@@ -1,113 +1,108 @@
 buildscript {
-    ext { 
-        springBootVersion = '2.1.1.RELEASE' 
-    }
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2")
-        classpath("net.ltgt.gradle:gradle-apt-plugin:0.19")
-    }
-}
-
-plugins {
-    id "com.cinnober.gradle.semver-git" version "2.3.1"
-    id 'org.springframework.boot' version '2.1.1.RELEASE'
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:3.5.6")
+  }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
-apply plugin: 'org.sonarqube'
 
 group = 'de.gessnerfl'
 description = """Fake SMTP Server :: Simple SMTP Server which stores emails in memory and lists email in a web ui"""
 
+ext.scmUrl = 'https://github.com/JavaSaBr/fake-smtp-server.git'
+ext.projectUrl = 'https://github.com/JavaSaBr/fake-smtp-server'
 
-ext.lombokVersion = '1.18.4'
-ext.scmUrl = 'git@github.com:gessnerfl/fake-smtp-server.git'
-ext.projectUrl = 'https://github.com/gessnerfl/fake-smtp-server'
-
-sourceCompatibility = 11
-targetCompatibility = 11
-
-repositories { 
-    jcenter() 
+repositories {
+  mavenCentral()
 }
 
-jacoco {
-    toolVersion = "0.8.2"
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
 }
 
 dependencies {
+  implementation platform(libs.spring.boot.dependencies)
+  implementation libs.spring.boot.starter.actuator
+  implementation libs.spring.boot.starter.web
+  implementation libs.spring.boot.starter.thymeleaf
+  implementation libs.spring.boot.starter.data.jpa
+  implementation libs.spring.boot.starter.mail
 
-    implementation('org.springframework.boot:spring-boot-starter-actuator')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    implementation('org.springframework.boot:spring-boot-starter-mail')
-    implementation('commons-io:commons-io:2.6')
-    implementation('org.subethamail:subethasmtp:3.1.7')
-    implementation('org.flywaydb:flyway-core')
-    implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.4.RELEASE')
-    implementation('com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438')
-    implementation('org.webjars.bower:jquery:3.3.1')
-    implementation('org.webjars:materializecss:1.0.0')
-    implementation('org.webjars:material-design-icons:3.0.1')
+  implementation libs.commons.io
+  implementation libs.subethasmtp
+  implementation libs.flyway.core
+  implementation libs.thymeleaf.extras.springsecurity
+  //implementation libs.jaxb.impl
+  implementation libs.jquery
+  implementation libs.materializecss
+  implementation libs.material.design.icons
+  implementation libs.jakarta.validation.api
+  implementation libs.hibernate.validator
 
-    compileOnly "org.projectlombok:lombok:$lombokVersion"
+  compileOnly libs.lombok
 
-    runtime "com.h2database:h2"
-    runtime "org.springframework.boot:spring-boot-devtools"
-    
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.springframework.security:spring-security-test"
-    testImplementation "org.apache.commons:commons-lang3:3.7"
-    testImplementation "org.ow2.asm:asm:7.0"
-    testImplementation "org.apache.commons:commons-lang3:3.8.1"
+  runtimeOnly libs.h2database
+  runtimeOnly libs.spring.boot.devtools
 
-    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+  testImplementation platform(libs.spring.boot.dependencies)
+  testImplementation libs.spring.boot.starter.test
+  testImplementation libs.spring.security.test
+  testImplementation libs.commons.lang3
+  testImplementation libs.asm
+  testImplementation libs.junit.api
+  testImplementation libs.junit.jupiter.params
 
-    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  testCompileOnly libs.lombok
+  testRuntimeOnly libs.junit.engine
+  testRuntimeOnly libs.junit.platform.launcher
+
+  annotationProcessor libs.lombok
+  //annotationProcessor libs.spring.boot.configuration.processor
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+test {
+  useJUnitPlatform()
+  failOnNoDiscoveredTests = false
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+tasks.register("sourcesJar", Jar) {
+  dependsOn "classes"
+  group "build"
+  archiveClassifier = "sources"
+  archiveBaseName = jar.archiveBaseName
+  from sourceSets.main.allSource
+}
+
+tasks.register("javadocJar", Jar) {
+  dependsOn "javadoc"
+  group "build"
+  archiveClassifier = "javadoc"
+  archiveBaseName = jar.archiveBaseName
+  from javadoc.destinationDir
 }
 
 artifacts {
-    archives sourcesJar
-    archives javadocJar
+  archives sourcesJar
+  archives javadocJar
 }
 
 javadoc {
-    failOnError = false
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectName", "Fake SMTP Server"
-        property "sonar.projectKey", "de.gessnerfl.fake-smtp-server"
-    }
+  failOnError = false
 }
 
 bootJar {
-    archiveName = 'fake-smtp-server.jar'
+  archiveBaseName = 'fake-smtp-server'
 }
 
 wrapper {
-    gradleVersion = '5.2'
-    distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = '9.1.0'
+  distributionType = Wrapper.DistributionType.ALL
 }

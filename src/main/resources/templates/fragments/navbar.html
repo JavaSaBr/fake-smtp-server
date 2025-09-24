@@ -4,17 +4,17 @@
 </head>
 
 <body>
-    <div class="navbar-fixed" th:fragment="navbar" >
-        <nav class="light-blue darken-4" style="padding-left:10px">
-            <div class="nav-wrapper">
-                <a class="brand-logo" href="/"><i class="material-icons" style="font-size: 2rem">email</i>Fake SMTP Server</a>
-                <div class="right right-margin">
+<div class="navbar-fixed" th:fragment="navbar">
+  <nav class="light-blue darken-4" style="padding-left:10px">
+    <div class="nav-wrapper">
+      <a class="brand-logo" href="/"><i class="material-icons" style="font-size: 2rem">email</i>Fake SMTP Server</a>
+      <div class="right right-margin">
                     <span sec:authorize="isAuthenticated()">
                     <a th:href="@{/logout}">Sign Out</a>
                 </span>
-                </div>
-            </div>
-        </nav>
+      </div>
     </div>
+  </nav>
+</div>
 </body>
 </html>

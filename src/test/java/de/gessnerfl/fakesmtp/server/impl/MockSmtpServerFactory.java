@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import static org.mockito.Mockito.mock;
 
-@Profile("integrationtest")
 @Service
+@Profile("integration-test")
 public class MockSmtpServerFactory implements SmtpServerFactory {
-    @Override
-    public SmtpServer create() {
-        return mock(SmtpServer.class);
-    }
+  @Override
+  public SmtpServer create() {
+    return mock(SmtpServer.class);
+  }
 }

@@ -2,30 +2,28 @@ package de.gessnerfl.fakesmtp.server.impl;
 
 import de.gessnerfl.fakesmtp.server.SmtpServer;
 import de.gessnerfl.fakesmtp.server.SmtpServerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
 
-@Profile("default")
 @Service
+@Profile("default")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SmtpServerFactoryImpl implements SmtpServerFactory {
 
-    private final EmailPersister emailPersister;
-    private final SmtpServerConfigurator configurator;
+  EmailPersister emailPersister;
+  SmtpServerConfigurator configurator;
 
-    @Autowired
-    public SmtpServerFactoryImpl(EmailPersister emailPersister, SmtpServerConfigurator configurator) {
-        this.emailPersister = emailPersister;
-        this.configurator = configurator;
-    }
-
-    @Override
-    public SmtpServer create() {
-        var simpleMessageListenerAdapter = new SimpleMessageListenerAdapter(emailPersister);
-        var smtpServer = new SMTPServer(simpleMessageListenerAdapter);
-        configurator.configure(smtpServer);
-        return new SmtpServerImpl(smtpServer);
-    }
+  @Override
+  public SmtpServer create() {
+    var simpleMessageListenerAdapter = new SimpleMessageListenerAdapter(emailPersister);
+    var smtpServer = new SMTPServer(simpleMessageListenerAdapter);
+    configurator.configure(smtpServer);
+    return new SmtpServerImpl(smtpServer);
+  }
 }

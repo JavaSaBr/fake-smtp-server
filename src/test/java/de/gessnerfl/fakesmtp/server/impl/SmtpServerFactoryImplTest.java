@@ -1,37 +1,36 @@
 package de.gessnerfl.fakesmtp.server.impl;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SmtpServerFactoryImplTest {
-    private final int PORT = 25;
+  private final int PORT = 25;
 
-    @Mock
-    private SmtpServerConfigurator configurator;
-    @Mock
-    private EmailPersister emailPersister;
+  @Mock
+  private SmtpServerConfigurator configurator;
+  @Mock
+  private EmailPersister emailPersister;
 
-    @InjectMocks
-    private SmtpServerFactoryImpl sut;
+  @InjectMocks
+  private SmtpServerFactoryImpl sut;
 
-    @Test
-    public void shouldCreateAndConfigureNewInsance(){
-        var smtpServer = sut.create();
+  @Test
+  public void shouldCreateAndConfigureNewInsance() {
+    var smtpServer = sut.create();
 
-        assertThat(smtpServer, instanceOf(SmtpServerImpl.class));
-        var impl = (SmtpServerImpl)smtpServer;
-        assertNotNull(impl.smtpServer);
+    Assertions.assertInstanceOf(SmtpServerImpl.class, smtpServer);
+    var impl = (SmtpServerImpl) smtpServer;
+    assertNotNull(impl.smtpServer);
 
-        verify(configurator).configure(impl.smtpServer);
-    }
+    verify(configurator).configure(impl.smtpServer);
+  }
 
 }
